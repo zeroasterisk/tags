@@ -39,6 +39,14 @@ class TagsController extends TagsAppController {
  */
 	public $helpers = array('Html', 'Form');
 
+	public function isAuthorized() {
+		if (in_array($this->params['action'], array('typeahead'))) {
+			// bypass authentication for these URLs
+			return true;
+		}
+		return false;
+	}
+
 /**
  * Index action
  *
@@ -141,5 +149,20 @@ class TagsController extends TagsAppController {
 			$this->Session->setFlash(__d('tags', 'Invalid Tag.'));
 		}
 		$this->redirect(array('action' => 'index'));
+	}
+
+	/**
+	 * typeahead for site.
+	 *  * @param string $id, site id.
+	 * @access public
+	 */
+	public function typeahead($id = null) {
+		$this->Prg->commonProcess();
+		$this->viewClass = 'JsonTypeahead';
+		$this->set('data', $this->Tag->find('list', array(
+			'fields' => array('id', $this->Tag->displayField),
+			'conditions' => $this->Tag->parseCriteria(am($this->request->query, $this->passedArgs)),
+			'limit' => 10,
+		)));
 	}
 }

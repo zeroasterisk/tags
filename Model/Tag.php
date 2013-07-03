@@ -29,6 +29,17 @@ class Tag extends TagsAppModel {
 			'foreignKey' => 'tag_id'));
 
 /**
+ * filterArgs for Search.Searchable behavior when applicable (without relying on SearchIndex)
+ */
+	public $filterArgs = array(
+		array('name' => 'term', 'type' => 'query', 'method' => 'matchTag'),
+	);
+
+	public function matchTag($data = array()) {
+		return array('OR' => array('name LIKE' => "%{$data['term']}%", 'keyname LIKE' => "%{$data['term']}%"));
+	}
+
+/**
  * HABTM associations
  *
  * @var array $hasAndBelongsToMany
