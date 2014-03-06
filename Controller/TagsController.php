@@ -39,7 +39,7 @@ class TagsController extends TagsAppController {
  */
 	public $helpers = array('Html', 'Form');
 
-	public function isAuthorized() {
+	public function isAuthorized($user, $request = null) {
 		if (in_array($this->params['action'], array('typeahead'))) {
 			// bypass authentication for these URLs
 			return true;
